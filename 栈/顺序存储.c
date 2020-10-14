@@ -10,20 +10,34 @@ typedef struct{
 }SqStack;
 
 //-----------------------------------
-void InitStack(SqStack *S);
-void DestroyStack(SqStack *S);
-void ClearStack(SqStack *S);
-char StackEmpty(SqStack S);
-int StackLength(SqStack S);
-char GetTop(SqStack S,int *e);
-void Push(SqStack *S,int e);
-char Pop(SqStack *S,int *e);
-void ScanfStack(SqStack *S);
-void PrintStack(SqStack S);
+void InitStack(SqStack *S);//-------------构造一个空栈S----------------
+void DestroyStack(SqStack *S);//-----------销毁栈S,S不再存在-------------
+void ClearStack(SqStack *S);//--------------把S置为空栈----------
+char StackEmpty(SqStack S);//-----------若栈S为空栈,则返回T,否则返回F-----
+int StackLength(SqStack S);//-----------返回S的元素的个数,即栈的长度--------
+char GetTop(SqStack S,int *e);//----------若栈不空,则用e返回S的栈顶元素,并返回O;否则返回E
+void Push(SqStack *S,int e);//---------插入元素e为新的栈顶元素--------
+char Pop(SqStack *S,int *e);//----若栈不空,则删除S的栈顶元素,用e返回其值,并返回O,或者返回E----
+void ScanfStack(SqStack *S);//---------通过键盘输入创建一个栈S,输入负数时结束录入-----------
+void PrintStack(SqStack S);//--------------输出栈S的元素-----------
+void SetStack(SqStack *S,int n);//------------对栈S进行赋值-----------
 //----------------------------------
 int main()
 {
-
+	SqStack a;
+	int e;
+	InitStack(&a);
+	SetStack(&a,5);
+	printf("栈a是否为空栈\t%c\n",StackEmpty(a));
+	PrintStack(a);
+	printf("栈a的长度是%d\n",StackLength(a));
+	Push(&a,10);
+	PrintStack(a);
+	printf("栈a的长度是%d\n",StackLength(a));
+	Pop(&a,&e);
+	PrintStack(a);
+	printf("栈a的长度是%d\n",StackLength(a));
+	return 0;
 }
 
 
@@ -117,5 +131,16 @@ void PrintStack(SqStack S)
 		{
 			printf("%d\t",*--S.top);
 		}
+		printf("\n");
+	}
+}
+//------------对栈S进行赋值-----------
+void SetStack(SqStack *S,int n)
+{
+	int i;
+	printf("请输入%d个元素\n",n);
+	for(i=0;i<n;i++)
+	{
+		scanf("%d",S->top++);
 	}
 }
