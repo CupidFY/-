@@ -3,7 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "顺序结构"=".\顺序结构.dsp" - Package Owner=<4>
+Project: "队列"=".\队列.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{

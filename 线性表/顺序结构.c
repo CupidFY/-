@@ -9,52 +9,60 @@ typedef struct{
 	int listsize;
 }SqList;
 
-void InitList(SqList *L);
-void SetList(SqList *L,int length);
-void PrintList(SqList L);
-void DestroyList(SqList *L);
-void ClearList(SqList *L);
-char ListEmpty(SqList *L);
-int ListLength(SqList *L);
-int GetElem(SqList *L,int i,int *p);
+void InitList(SqList *L);   //构造一个空的线性表L
+void SetList(SqList *L,int length);  //对空的线性表L进行赋值
+void PrintList(SqList L);  //输出线性表L的元素
+void DestroyList(SqList *L);  //销毁线性表L
+void ClearList(SqList *L);   //将L重置为空表
+char ListEmpty(SqList *L);   //若L为空表，则返回T,否则返回F
+int ListLength(SqList *L);   //返回L中数据元素个数
+int GetElem(SqList *L,int i,int *p);  //用e返回L中第i个数据元素的值
 //      int LocateElem(L,e,compare());
-void PriorElem(SqList *L,int cur_e,int *pre_e);
-void NextElem(SqList *L,int cur_e,int *next_e); 
-void ListInsert(SqList *L,int i,int e);
-void ListDelete(SqList *L,int i,int *e);
+void PriorElem(SqList *L,int cur_e,int *pre_e);  //若cur_e是L的数据元素，且不是第一个，则用pre_e返回它的前驱，否则操作失败，pre_e无定义
+void NextElem(SqList *L,int cur_e,int *next_e);    //若cur_e是L的数据元素，且不是最后一个，则用next_e返回它的后继，否则操作失败，next_e无定义
+void ListInsert(SqList *L,int i,int e);      //在L中第i个位置之前插入新的数据元素,L的长度加1
+void ListDelete(SqList *L,int i,int *e);       //删除L的第i个元素,并用e返回其值,L的长度减1
 //void ListTraverse(L,visit());
-void MergeList(SqList La,SqList Lb,SqList *p);
-
+void MergeList(SqList La,SqList Lb,SqList *p);  //归并La和Lb得到新的顺序线性表Lc,Lc的元素也按值非递减排列
 
 int main(){
-	int i;
-	int a;
 	SqList A,B,C;
-	InitList(&A); //结构体名只是变量名，不是首地址
+	int x,y,pre,next;
+	int a,b;
+	char c = 'F';
+	InitList(&A);
 	InitList(&B);
-	A.elem[0] = 5;
-	A.elem[1] = 7;
-	A.length=2;
-	SetList(&B,3);
-	//B.elem[0]=0;
-	//B.elem[1]=7;
-	//B.length=2;
+	InitList(&C);
+	printf("请输入线性表A的元素\n");
+	SetList(&A,3);
+	printf("请输入线性表B的元素\n");
+	SetList(&B,4);
+	printf("输入结束\n");
+	printf("请输入在A中插入的位置及数据\n");
+	scanf("%d %d",&x,&y);
+	ListInsert(&A,x,y);
+	printf("A中的元素\t");
+	PrintList(A);
+	printf("B中的元素\t");
+	PrintList(B);
+	PriorElem(&A,2,&pre);
+	printf("A中2的前一个元素是%d\n",pre);
+	NextElem(&B,5,&next);
+	printf("B中5的下一个元素是%d\n",next);
+	printf("请输入B中要删除的元素的位置\n");
+	scanf("%d",&a);
+	ListDelete(&B,a,&b);
+	printf("B中的元素\t");
+	PrintList(B);
 	MergeList(A,B,&C);
-	/*for(i=0;i<C.length;i++){
-		printf("%d\n",C.elem[i]);
-	}*/
+	printf("合并后C中的元素\t");
 	PrintList(C);
-	/*ListInsert(&A,2,6);
-	for(i=0;i<3;i++){
-		printf("%d\n",A.elem[i]);
-	}
-	printf("\n");
-	ListDelete(&A,3,&a);
-	printf("%d\n",a);
-	for(i=0;i<A.length;i++){
-		printf("%d\n",A.elem[i]);
-	}*/
-
+	ClearList(&B);
+	printf("B是否被置为空表\t%c\n",ListEmpty(&B));
+	printf("销毁表A,B,C\n");
+	DestroyList(&B);
+	DestroyList(&A);
+	DestroyList(&C);
 	return 0;
 }
 
@@ -73,9 +81,9 @@ void SetList(SqList *L,int leng)
 	int i;
 	for(i=0;i<leng;i++)
 	{
-		scanf("%d",&L->elem[i]);
+		scanf("%d",&L->elem[L->length]);
+		L->length++;
 	}
-	L->length = leng;
 }
 //-----------输出线性表L的元素--------
 void PrintList(SqList L)
@@ -83,20 +91,21 @@ void PrintList(SqList L)
 	int i;
 	for(i=0;i<L.length;i++)
 	{
-		printf("%d\n",L.elem[i]);
+		printf("%d\t",L.elem[i]);
 	}
+	printf("\n");
 }
 //----------销毁线性表L------------------
 void DestroyList(SqList *L)
 {
-	free(L);
+	free(L->elem);
 }
 //-------------将L重置为空表---------------
 void ClearList(SqList *L)
 {
 	L->length = 0;
 }
-//--------------若L为空表，则返回TRUE,否则返回FALSE----------------
+//--------------若L为空表，则返回T,否则返回F----------------
 char ListEmpty(SqList *L)
 {
 	if(L->elem != 0)
@@ -137,7 +146,7 @@ void PriorElem(SqList *L,int cur_e,int *pre_e)
 void NextElem(SqList *L,int cur_e,int *next_e)
 {
 	int i;
-	for(i=0;i<(L->length)-1;i++)
+	for(i=0;i<(L->length);i++)
 	{
 		if(cur_e==L->elem[i])
 		{
@@ -149,8 +158,9 @@ void NextElem(SqList *L,int cur_e,int *next_e)
 //------------------在L中第i个位置之前插入新的数据元素,L的长度加1-------------------
 void ListInsert(SqList *L,int i,int e)
 {
-	int *newbase,*q,*p;
-	if(i<1 || i>L->length)
+	int *newbase;
+	int p;
+	if(i<1 || i>L->length +1)
 		exit (0);
 	if(L->length >= L->listsize)
 	{
@@ -162,15 +172,13 @@ void ListInsert(SqList *L,int i,int e)
 		L->elem = newbase;
 		L->listsize = L->listsize + LISTINCREMENT;
 	}
-	//q = &L->elem[i-1];         可以
-	//q = L->elem[i-1];        不可以
-	q = L->elem+i-1;
-	for(p = L->elem + L->length-1;p>=q;p--)
+	p = L->length;
+	for(;p<i-1;p--)
 	{
-		*(p+1) = *p;
-	}
-	*q = e;
-	++L->length;
+		L->elem[p] = L->elem[p-1];
+	} 
+	L->elem[p] = e;
+	L->length++;
 }
 //------------删除L的第i个元素,并用e返回其值,L的长度减1
 void ListDelete(SqList *L,int i,int *e)
